@@ -12,12 +12,11 @@ git config --global user.name "${git_name}"
 
 # Define main directory
 main_dir="$(readlink -f -- $(pwd))/rom"
-if [ -d "${main_dir}" ]; then
-    echo "[!] Main directory already exists"
-    cd "${main_dir}" || exit 1
+if [ -d ${main_dir} ]; then
+    cd "${main_dir}"
 else
-    mkdir -p "${main_dir}"
-    cd "${main_dir}" || exit 1
+    mkdir ${main_dir}
+    cd ${main_dir}
 fi
 
 # Function to send Telegram messages
@@ -125,10 +124,8 @@ fi
 
 # Clone repositories
 clone_repo "${device_tree_path}" "${device_tree_clone}" "Device tree" "${device_tree_branch}"
-clone_repo "${sepolicy_tree_path}" "${sepolicy_tree_clone}" "Sepolicy tree" "${sepolicy_tree_branch}"
+clone_repo "${common_tree_path}" "${common_tree_clone}" "Sepolicy tree" "${common_tree_branch}"
 clone_repo "${vendor_tree_path}" "${vendor_tree_clone}" "Vendor tree" "${vendor_tree_branch}" 15
-clone_repo "${ims_vendor_tree_path}" "${ims_vendor_tree_clone}" "IMS Vendor tree" "${ims_vendor_tree_branch}" 1
-clone_repo "${fw_vendor_tree_path}" "${fw_vendor_tree_clone}" "Firmware Vendor tree" "${fw_vendor_tree_branch}" 1
 clone_repo "${kernel_tree_path}" "${kernel_tree_clone}" "Kernel" "${kernel_tree_branch}" 250
 
 # Clone and update extra repos
@@ -140,9 +137,7 @@ if [ -n "${extra_repos_clone}" ]; then
     for index in "${!extra_repos_clone[@]}"; do
         repo_path="${main_dir}/${extra_repos_path[index]}"
         clone_repo "${repo_path}" "${extra_repos_clone[index]}" "Extra Repo ${extra_repos_path[index]}" "${extra_repos_branch[index]}"
-        if [ "${should_update_trees}" = "1" ]; then
-            update_repo "${repo_path}" "${extra_repos_branch[index]}" "Extra Repo ${extra_repos_path[index]}"
-        fi
+        update_repo "${repo_path}" "${extra_repos_branch[index]}" "Extra Repo ${extra_repos_path[index]}"
     done
 else
     echo "[!] No extra repos to clone"
@@ -151,10 +146,8 @@ fi
 # Update repositories if needed
 if [ "${should_update_trees}" = "1" ]; then
     update_repo "${device_tree_path}" "${device_tree_branch}" "Device repos"
-    update_repo "${sepolicy_tree_path}" "${sepolicy_tree_branch}" "Sepolicy repos"
+    update_repo "${common_tree_path}" "${common_tree_branch}" "Sepolicy repos"
     update_repo "${vendor_tree_path}" "${vendor_tree_branch}" "Vendor repos"
-    update_repo "${ims_vendor_tree_path}" "${ims_vendor_tree_branch}" "IMS Vendor repos"
-    update_repo "${fw_vendor_tree_path}" "${fw_vendor_tree_branch}" "Firmware Vendor repos"
     update_repo "${kernel_tree_path}" "${kernel_tree_branch}" "Kernel repos"
 fi
 
@@ -192,8 +185,7 @@ if [ "${installclean}" = "1" ]; then
     make installclean
 fi
 
-lunch "${lunch_target}"
-${make_cmd} || { echo "[!] Build failed"; send_msg "Build failed for ${device_codename} - Log: https://ci.erensprojects.me/job/${JOB_NAME}/ws/rom/out/error.log"; exit 1; }
+brunch ${device_codename} || { echo "[!] Build failed"; send_msg "Build failed for ${device_codename} - Log: https://ci.erensprojects.me/job/${JOB_NAME}/ws/rom/out/error.log"; exit 1; }
 
 # If the build is successful, upload ROM
 echo "[*] Build completed successfully"
