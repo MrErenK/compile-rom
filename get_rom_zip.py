@@ -39,10 +39,12 @@ for filename in files:
             closest_filename = filename
 
 # Remove every character after the zip extension
-closest_filename = closest_filename.split(".zip")[0] + ".zip"
+if closest_filename is not None:
+    closest_filename = closest_filename.split(".zip")[0] + ".zip"
 
 # Get the path of the closest zip file
 closest_filename = os.path.join(directory, closest_filename)
 
 # Print the closest zip filename
 print(closest_filename)
+
