@@ -127,7 +127,7 @@ fi
 
 # Clone repositories
 clone_repo "${device_tree_path}" "${device_tree_clone}" "Device tree" "${device_tree_branch}"
-clone_repo "${common_tree_path}" "${common_tree_clone}" "Sepolicy tree" "${common_tree_branch}"
+clone_repo "${common_tree_path}" "${common_tree_clone}" "Common device tree" "${common_tree_branch}"
 clone_repo "${vendor_tree_path}" "${vendor_tree_clone}" "Vendor tree" "${vendor_tree_branch}" 15
 clone_repo "${kernel_tree_path}" "${kernel_tree_clone}" "Kernel" "${kernel_tree_branch}" 250
 
@@ -148,10 +148,10 @@ fi
 
 # Update repositories if needed
 if [ "${should_update_trees}" = "1" ]; then
-    update_repo "${device_tree_path}" "${device_tree_branch}" "Device repos"
-    update_repo "${common_tree_path}" "${common_tree_branch}" "Sepolicy repos"
-    update_repo "${vendor_tree_path}" "${vendor_tree_branch}" "Vendor repos"
-    update_repo "${kernel_tree_path}" "${kernel_tree_branch}" "Kernel repos"
+    update_repo "${device_tree_path}" "${device_tree_branch}" "Device tree"
+    update_repo "${common_tree_path}" "${common_tree_branch}" "Common device tree"
+    update_repo "${vendor_tree_path}" "${vendor_tree_branch}" "Vendor tree"
+    update_repo "${kernel_tree_path}" "${kernel_tree_branch}" "Kernel tree"
 fi
 
 # Clean the out directory if needed
